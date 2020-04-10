@@ -16,6 +16,9 @@ namespace Wings
         float oldMass;
         float oldSpeed;
 
+        bool thumbLastState;
+        bool thumbState;
+
         public float airSpeedMultiplier = 3f;
         float flySpeed;
         bool speedStored;
@@ -26,22 +29,24 @@ namespace Wings
         {
             initialized = true; // Set it to true when your script are loaded
             Debug.Log("--------- WINGS LOADED -----------");
-            SteamVR_Actions.default_Jump.onChange += OnJumpPress;
 
-          
-        }
-
-
-        public void OnJumpPress(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource, bool newState)
-        {
-            if (!speedStored)
+            if (OVRPlugin.hasInputFocus)
             {
-                oldSpeed = Player.local.locomotion.airSpeed;
-                flySpeed = oldSpeed * airSpeedMultiplier;
-                speedStored = true;
+               
+            }
+            else
+            {                
+                SteamVR_Actions.default_Jump.onChange += OnJumpPress;
             }
 
-            Debug.Log("----ON JUMP PRESS CHANGE--------- "+newState);
+
+        
+            
+        }
+        
+        public void JumpButtonPress(bool pushed)
+        {
+            
 
             if (!Player.local)
             {
@@ -59,9 +64,10 @@ namespace Wings
 
                     if (!Player.local.locomotion.isGrounded)
                     {
+
                         if (isFlying)
                         {
-                            if (newState)
+                            if (pushed)
                             {
                                 if (hasReleased)
                                 {
@@ -78,7 +84,7 @@ namespace Wings
                         }
                         else
                         {
-                            if (!newState)
+                            if (!pushed)
                             {
                                 hasReleased = true;
                             }
@@ -92,7 +98,7 @@ namespace Wings
                         }
 
 
-  
+
 
                     }
 
@@ -101,6 +107,11 @@ namespace Wings
 
 
             }
+        }
+
+        public void OnJumpPress(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource, bool newState)
+        {
+            JumpButtonPress(newState);
         }
 
         public override void Update(LevelDefinition levelDefinition)
@@ -117,23 +128,66 @@ namespace Wings
                 }
                 else
                 {
+                    thumbState = OVRInput.GetDown(OVRInput.RawButton.RThumbstick, OVRInput.Controller.Active);
+
+                    
 
                     if (!Player.local.locomotion.isGrounded)
                     {
+                        if (OVRPlugin.hasInputFocus)
+                        {
+                            if (thumbState)
+                            {
+                                if (!thumbLastState)
+                                {
+                                    if (isFlying)
+                                    {
+                                        DeactivateFly();
+                                    }
+                                    else
+                                    {
+                                        ActivateFly();
+
+                                    }
+
+                                    
+                                }
+                            }
+                        }
+                        
+
+
+
+
+
 
                         if (isFlying)
                         {
 
                             DestabilizeHeldNPC();
 
-                            Vector2 turnAxis = SteamVR_Actions.default_Turn.axis;
 
-                            if(turnAxis.y != 0)
+                            if (OVRPlugin.hasInputFocus)
                             {
-                                rb.AddForce(Vector3.up * flyAcceleration * turnAxis.y, ForceMode.Acceleration);
-                            }
+                                Vector2 turnAxis = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.RTouch);
 
-                            return;
+                                if(turnAxis.y!= 0)
+                                {
+                                    MoveFlyingPlayerUp(turnAxis.y);
+                                }
+                            }
+                            else
+                            {
+                                Vector2 turnAxis = SteamVR_Actions.default_Turn.axis;
+
+                                if (turnAxis.y != 0)
+                                {
+                                    MoveFlyingPlayerUp(turnAxis.y);
+                                }
+                            }
+                            
+
+                      
                         }
 
 
@@ -146,13 +200,17 @@ namespace Wings
                         }
                     }
 
-
+                    thumbLastState = thumbState;
                 }
 
             }
         }
 
 
+        public void MoveFlyingPlayerUp(float amount)
+        { 
+            rb.AddForce(Vector3.up * flyAcceleration * amount, ForceMode.Acceleration);
+        }
 
 
         public void DestabilizeHeldNPC()
@@ -234,6 +292,13 @@ namespace Wings
 
         public void ActivateFly()
         {
+            if (!speedStored)
+            {
+                oldSpeed = Player.local.locomotion.airSpeed;
+                flySpeed = oldSpeed * airSpeedMultiplier;
+                speedStored = true;
+            }
+
 
             rb = Player.local.locomotion.rb;
             if (oldDrag == 1000f)

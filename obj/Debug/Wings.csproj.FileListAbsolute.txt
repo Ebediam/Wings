@@ -72,7 +72,7 @@ D:\General\B&S MOds\Plugins\Wings\bin\Debug\Unity.RenderPipelines.Core.Runtime.d
 D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings.csprojAssemblyReference.cache
 D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings.csproj.CoreCompileInputs.cache
 D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings.csproj.CopyComplete
-D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V1.dll
-D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V1.pdb
-D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V1.dll
-D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V1.pdb
+D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V2.dll
+D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V2.pdb
+D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V2.dll
+D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V2.pdb
