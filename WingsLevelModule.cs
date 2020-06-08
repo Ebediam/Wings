@@ -15,7 +15,7 @@ namespace Wings
         public static WingsEvent DeactivateWings;
 
         bool isActive = true;
-        
+        public static WingsLevelModule local;
 
         float oldMass;
         float oldSpeed;
@@ -34,8 +34,8 @@ namespace Wings
         {
             initialized = true; // Set it to true when your script are loaded
             Debug.Log("--------- WINGS LOADED -----------");
-           
-            
+
+            local = this;
 
             if (PlayerControl.driver == PlayerControl.Driver.Oculus)
             {
