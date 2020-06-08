@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using BS;
+using ThunderRoad;
 using OVR;
 using Valve.VR;
 
@@ -7,11 +7,15 @@ namespace Wings
 {
     public class WingsLevelModule : LevelModule
     {
-
-
         bool hasReleased = false;
         bool isFlying = false;
         Rigidbody rb;
+
+        public delegate void WingsEvent(bool active);
+        public static WingsEvent DeactivateWings;
+
+        bool isActive = true;
+        
 
         float oldMass;
         float oldSpeed;
@@ -23,30 +27,36 @@ namespace Wings
         float flySpeed;
         bool speedStored;
         float oldDrag = 1000f;
+        float oldMaxAngle;
         public float flyAcceleration = 10f;
 
         public override void OnLevelLoaded(LevelDefinition levelDefinition)
         {
             initialized = true; // Set it to true when your script are loaded
             Debug.Log("--------- WINGS LOADED -----------");
+           
+            
 
-            if (OVRPlugin.hasInputFocus)
+            if (PlayerControl.driver == PlayerControl.Driver.Oculus)
             {
-               
+                Debug.Log("OVRPlugin has input focus (Oculus)");
             }
             else
-            {                
+            {
+                Debug.Log("SteamVR has input focus (Steam)");
                 SteamVR_Actions.default_Jump.onChange += OnJumpPress;
             }
 
-
-        
+            DeactivateWings += SetWingsActive;
             
         }
         
         public void JumpButtonPress(bool pushed)
         {
-            
+            if (!isActive)
+            {
+                return;
+            }
 
             if (!Player.local)
             {
@@ -116,6 +126,11 @@ namespace Wings
 
         public override void Update(LevelDefinition levelDefinition)
         {
+            if (!isActive)
+            {
+                return;
+            }
+
             if (!Player.local)
             {
                 return;
@@ -130,7 +145,6 @@ namespace Wings
                 {
                     thumbState = OVRInput.GetDown(OVRInput.RawButton.RThumbstick, OVRInput.Controller.Active);
 
-                    
 
                     if (!Player.local.locomotion.isGrounded)
                     {
@@ -163,9 +177,7 @@ namespace Wings
 
                         if (isFlying)
                         {
-
                             DestabilizeHeldNPC();
-
 
                             if (OVRPlugin.hasInputFocus)
                             {
@@ -208,8 +220,24 @@ namespace Wings
 
 
         public void MoveFlyingPlayerUp(float amount)
-        { 
+        {
+            if (!isActive)
+            {
+                return;
+            }
+
+            if (Pointer.GetActive())
+            {
+                if (Pointer.GetActive().isPointingUI)
+                {
+                    return;
+                }
+            }
+ 
             rb.AddForce(Vector3.up * flyAcceleration * amount, ForceMode.Acceleration);
+            
+
+            
         }
 
 
@@ -290,16 +318,24 @@ namespace Wings
             }
         }
 
+        public void SetWingsActive(bool active)
+        {
+            isActive = active;
+        }
+
         public void ActivateFly()
         {
+            
+
             if (!speedStored)
             {
                 oldSpeed = Player.local.locomotion.airSpeed;
                 flySpeed = oldSpeed * airSpeedMultiplier;
                 speedStored = true;
+                oldMaxAngle = Player.local.locomotion.groundMaxAngle;
             }
 
-
+            Player.local.locomotion.groundMaxAngle = -359f;
             rb = Player.local.locomotion.rb;
             if (oldDrag == 1000f)
             {
@@ -318,6 +354,7 @@ namespace Wings
 
         public void DeactivateFly()
         {
+            Player.local.locomotion.groundMaxAngle = oldMaxAngle;
             isFlying = false;
             rb.drag = oldDrag;
             hasReleased = false;
@@ -375,12 +412,7 @@ namespace Wings
    
             }
             
-            /*
-            Debug.Log("Move Active: " + PlayerControl.moveActive);
-            Debug.Log("Move enabled: " + PlayerControl.local.moveEnabled);
-            //Debug.Log("GetTurnAxis: " + PlayerControl.local.GetTurnAxis());
-            Debug.Log("Jump enabled: " + PlayerControl.local.jumpEnabled);
-            */
+
            
 
         }
