@@ -66,12 +66,12 @@ D:\General\B&S MOds\Plugins\Wings\bin\Debug\Unity.RenderPipelines.Core.Runtime.d
 D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings.csprojAssemblyReference.cache
 D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings.csproj.CoreCompileInputs.cache
 D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings.csproj.CopyComplete
-D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V4.dll
-D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V4.pdb
 D:\General\B&S MOds\Plugins\Wings\bin\Debug\Unity.RenderPipelines.Universal.Runtime.dll
 D:\General\B&S MOds\Plugins\Wings\bin\Debug\PaintIn3D.dll
 D:\General\B&S MOds\Plugins\Wings\bin\Debug\Oculus.Platform.dll
 D:\General\B&S MOds\Plugins\Wings\bin\Debug\UnityEngine.SubsystemsModule.dll
 D:\General\B&S MOds\Plugins\Wings\bin\Debug\Unity.RenderPipeline.Universal.ShaderLibrary.dll
-D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V4.dll
-D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V4.pdb
+D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V4_1.dll
+D:\General\B&S MOds\Plugins\Wings\bin\Debug\Wings_V4_1.pdb
+D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V4_1.dll
+D:\General\B&S MOds\Plugins\Wings\obj\Debug\Wings_V4_1.pdb
